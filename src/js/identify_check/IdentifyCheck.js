@@ -1,9 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
+import "../../scss/Common.scss";
+import "../../scss/App.scss";
+import "../../scss/IdentifyCheck.scss";
 
 const IdentifyCheck = () => {
-  // const [imageSrc, setImageSrc] = useState(null);
-  // const [base64, setbase64] = useState(null)
-
+  const [imageSrc, setImageSrc] = useState(null);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [dataFetched, setDataFetched] = useState(false); // Check api have call already?
@@ -39,10 +40,9 @@ const IdentifyCheck = () => {
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
-      // setImageSrc(canvas.toDataURL('image/png'));
+      setImageSrc(canvas.toDataURL("image/png"));
       const base64Image = canvas.toDataURL("image/png");
       const base64String = base64Image.split(",")[1];
-      // setbase64(base64String)
 
       setLoading(true); // start call api
       setDataFetched(false); // set the state before call api
@@ -64,7 +64,7 @@ const IdentifyCheck = () => {
         const result = await response.json();
         setData(result);
       } catch (error) {
-        console.error("There was a problem with the fetch operation:", error);
+        // console.error("There was a problem with the fetch operation:", error);
         setError(error.message);
         setData(null);
       } finally {
@@ -76,19 +76,32 @@ const IdentifyCheck = () => {
 
   return (
     <div>
-      <button onClick={capturePhoto}>Capture Photo</button>
+      <button
+        className="identifier-find-btn btn btn-whiteColor"
+        onClick={capturePhoto}
+      >
+        Capture Photo
+      </button>
       <div>
         <video ref={videoRef} style={{ display: "none" }} />
         <canvas ref={canvasRef} style={{ display: "none" }} />
-        {/* {imageSrc && <img src={imageSrc} alt="Captured" style={{ width: '300px' }} />} */}
 
-        {loading && <p>Loading...</p>}
-      
+        {loading && <div class="loader"></div>}
+
         {!loading && dataFetched && data ? (
           <>
-            <p>ID: {data.id}</p>
-            <p>Distance: {data.distance}</p>
-            <p>Similarity: {data.similarity}</p>
+            <div className="result">
+              <div className="image-result">
+                {imageSrc && (
+                  <img src={imageSrc} alt="Captured" className="images-find" />
+                )}
+              </div>
+              <div className="contents">
+                <p>ID: {data.id}</p>
+                <p>Distance: {data.distance.toFixed(1)}</p>
+                <p>Similarity: {data.similarity.toFixed(1)}</p>
+              </div>
+            </div>
           </>
         ) : (
           error && <p style={{ color: "red" }}>Error: {error}</p>

@@ -80,13 +80,10 @@ function App() {
                 </div>
             </div>
             <div className="identifier-find">
-                <button className="identifier-find-btn btn btn-whiteColor">Find</button>
-                <div className="identifier-find-result">
-
-                </div>
+                <IdentifyCheck></IdentifyCheck>               
             </div>
             <div>
-                <IdentifyCheck></IdentifyCheck>
+               
             </div>
            
         </div>
