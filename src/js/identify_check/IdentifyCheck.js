@@ -7,6 +7,7 @@ const IdentifyCheck = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [dataFetched, setDataFetched] = useState(false); // Check api have call already?
+  const [error, setError] = useState(null);
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
 
@@ -45,7 +46,7 @@ const IdentifyCheck = () => {
 
       setLoading(true); // start call api
       setDataFetched(false); // set the state before call api
-
+      setError(null);
       try {
         const response = await fetch("/moldova/v2/identity/check", {
           method: "POST",
@@ -56,13 +57,15 @@ const IdentifyCheck = () => {
         });
 
         if (!response.ok) {
-          throw new Error("Network response was not ok");
+          const errorText = await response.text(); // Get response text for detailed error
+          throw new Error(`Error ${response.status}: ${errorText}`);
         }
 
         const result = await response.json();
         setData(result);
       } catch (error) {
         console.error("There was a problem with the fetch operation:", error);
+        setError(error.message);
         setData(null);
       } finally {
         setLoading(false); // complete call api
@@ -80,15 +83,14 @@ const IdentifyCheck = () => {
         {/* {imageSrc && <img src={imageSrc} alt="Captured" style={{ width: '300px' }} />} */}
 
         {loading && <p>Loading...</p>}
-
         {!loading && dataFetched && data ? (
           <>
+            <p>ID: {data.id}</p>
             <p>Distance: {data.distance}</p>
             <p>Similarity: {data.similarity}</p>
-            <p>ID: {data.id}</p>
           </>
         ) : (
-          !loading && dataFetched && <p>Không có dữ liệu</p>
+          error && <p style={{ color: "red" }}>Error: {error}</p>
         )}
       </div>
     </div>
