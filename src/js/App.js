@@ -8,6 +8,7 @@ import strengthImg from '../image/strength.png';
 import headerLineImg from '../image/headerLine.png';
 
 function App() {
+    
     const [showPopup, setShowPopup] = useState(false);
 
     const togglePopup = () => {
