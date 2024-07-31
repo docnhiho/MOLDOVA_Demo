@@ -83,6 +83,7 @@ const IdentifyCheck = () => {
         {/* {imageSrc && <img src={imageSrc} alt="Captured" style={{ width: '300px' }} />} */}
 
         {loading && <p>Loading...</p>}
+      
         {!loading && dataFetched && data ? (
           <>
             <p>ID: {data.id}</p>
